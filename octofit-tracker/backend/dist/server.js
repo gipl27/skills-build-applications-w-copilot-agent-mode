@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
+const database_1 = require("./config/database");
 const activities_1 = __importDefault(require("./routes/activities"));
 const leaderboard_1 = __importDefault(require("./routes/leaderboard"));
 const teams_1 = __importDefault(require("./routes/teams"));
@@ -15,7 +15,6 @@ const workouts_1 = __importDefault(require("./routes/workouts"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
     ? `https://${codespaceName}-8000.app.github.dev`
@@ -32,13 +31,13 @@ app.get('/api/health', (_req, res) => {
         status: 'ok',
         service: 'octofit-backend',
         baseUrl,
-        mongoDatabase: 'octofit_db',
+        mongoDatabase: database_1.databaseName,
     });
 });
 async function startServer() {
     try {
-        await mongoose_1.default.connect(MONGODB_URI, { dbName: 'octofit_db' });
-        console.log(`MongoDB connected: ${MONGODB_URI}`);
+        await (0, database_1.connectToDatabase)();
+        console.log(`MongoDB connected: ${database_1.mongoUri}`);
         app.listen(PORT, () => {
             console.log(`Backend running on ${baseUrl}`);
         });
