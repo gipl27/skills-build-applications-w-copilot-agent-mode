@@ -9,5 +9,5 @@ const mongoose_1 = __importDefault(require("mongoose"));
 exports.databaseName = 'octofit_db';
 exports.mongoUri = process.env.MONGODB_URI || `mongodb://127.0.0.1:27017/${exports.databaseName}`;
 async function connectToDatabase() {
-    await mongoose_1.default.connect(exports.mongoUri, { dbName: exports.databaseName });
+    await mongoose_1.default.connect(exports.mongoUri, { dbName: exports.databaseName, serverSelectionTimeoutMS: 2000 });
 }
