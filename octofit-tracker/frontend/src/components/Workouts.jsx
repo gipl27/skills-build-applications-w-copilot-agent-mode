@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { buildApiUrl, fetchCollection } from '../api/octofitApi'
+import { fetchCollectionFromUrl } from '../api/octofitApi'
+
+const workoutsApiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : 'http://localhost:8000/api/workouts/'
 
 function Workouts() {
   const [workouts, setWorkouts] = useState([])
@@ -7,7 +11,7 @@ function Workouts() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchCollection('workouts')
+    fetchCollectionFromUrl(workoutsApiEndpoint)
       .then((data) => {
         setWorkouts(data)
         setStatus('ready')
@@ -23,7 +27,7 @@ function Workouts() {
       <div className="view-header">
         <div>
           <h1>Workouts</h1>
-          <p>{buildApiUrl('workouts')}</p>
+          <p>{workoutsApiEndpoint}</p>
         </div>
         <span className="metric">{workouts.length}</span>
       </div>

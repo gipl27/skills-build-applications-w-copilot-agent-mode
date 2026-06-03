@@ -29,7 +29,11 @@ export function normalizeCollectionResponse(payload) {
 }
 
 export async function fetchCollection(component) {
-  const response = await fetch(buildApiUrl(component))
+  return fetchCollectionFromUrl(buildApiUrl(component))
+}
+
+export async function fetchCollectionFromUrl(apiUrl) {
+  const response = await fetch(apiUrl)
 
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`)

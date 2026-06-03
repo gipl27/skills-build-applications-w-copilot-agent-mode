@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { buildApiUrl, fetchCollection } from '../api/octofitApi'
+import { fetchCollectionFromUrl } from '../api/octofitApi'
+
+const leaderboardApiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
 
 function Leaderboard() {
   const [entries, setEntries] = useState([])
@@ -7,7 +11,7 @@ function Leaderboard() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchCollection('leaderboard')
+    fetchCollectionFromUrl(leaderboardApiEndpoint)
       .then((data) => {
         setEntries(data)
         setStatus('ready')
@@ -23,7 +27,7 @@ function Leaderboard() {
       <div className="view-header">
         <div>
           <h1>Leaderboard</h1>
-          <p>{buildApiUrl('leaderboard')}</p>
+          <p>{leaderboardApiEndpoint}</p>
         </div>
         <span className="metric">{entries.length}</span>
       </div>

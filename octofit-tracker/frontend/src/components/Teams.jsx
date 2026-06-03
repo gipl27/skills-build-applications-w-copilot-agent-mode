@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { buildApiUrl, fetchCollection } from '../api/octofitApi'
+import { fetchCollectionFromUrl } from '../api/octofitApi'
+
+const teamsApiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : 'http://localhost:8000/api/teams/'
 
 function Teams() {
   const [teams, setTeams] = useState([])
@@ -7,7 +11,7 @@ function Teams() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchCollection('teams')
+    fetchCollectionFromUrl(teamsApiEndpoint)
       .then((data) => {
         setTeams(data)
         setStatus('ready')
@@ -23,7 +27,7 @@ function Teams() {
       <div className="view-header">
         <div>
           <h1>Teams</h1>
-          <p>{buildApiUrl('teams')}</p>
+          <p>{teamsApiEndpoint}</p>
         </div>
         <span className="metric">{teams.length}</span>
       </div>
