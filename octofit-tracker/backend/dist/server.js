@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
-const api_1 = require("./config/api");
 const database_1 = require("./config/database");
 const runtime_1 = require("./config/runtime");
 const activities_1 = __importDefault(require("./routes/activities"));
@@ -16,7 +15,11 @@ const users_1 = __importDefault(require("./routes/users"));
 const workouts_1 = __importDefault(require("./routes/workouts"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const baseUrl = (0, api_1.getApiBaseUrl)();
+const PORT = Number(process.env.PORT) || 8000;
+const codespaceName = process.env.CODESPACE_NAME;
+const baseUrl = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev`
+    : `http://localhost:${PORT}`;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api/users', users_1.default);
@@ -43,7 +46,7 @@ async function startServer() {
         console.warn(`MongoDB unavailable at ${database_1.mongoUri}; using in-memory sample data.`);
         console.warn(error);
     }
-    app.listen(api_1.apiPort, () => {
+    app.listen(PORT, () => {
         console.log(`Backend running on ${baseUrl}`);
     });
 }

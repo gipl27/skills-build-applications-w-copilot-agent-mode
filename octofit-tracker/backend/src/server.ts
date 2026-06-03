@@ -1,7 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import { apiPort, getApiBaseUrl } from './config/api';
 import { connectToDatabase, databaseName, mongoUri } from './config/database';
 import { enableOfflineDataMode, offlineDataMode } from './config/runtime';
 import activitiesRouter from './routes/activities';
@@ -14,7 +13,11 @@ dotenv.config();
 
 const app = express();
 
-const baseUrl = getApiBaseUrl();
+const PORT = Number(process.env.PORT) || 8000;
+const codespaceName = process.env.CODESPACE_NAME;
+const baseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : `http://localhost:${PORT}`;
 
 app.use(cors());
 app.use(express.json());
@@ -45,7 +48,7 @@ async function startServer() {
     console.warn(error);
   }
 
-  app.listen(apiPort, () => {
+  app.listen(PORT, () => {
     console.log(`Backend running on ${baseUrl}`);
   });
 }
